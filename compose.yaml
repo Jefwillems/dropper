@@ -1,0 +1,7 @@
+﻿services:
+  dropper:
+    image: dropper
+    build:
+      context: .
+      dockerfile: Dropper/Dockerfile
+
