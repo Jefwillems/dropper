@@ -74,3 +74,35 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
+
+  publish-chart:
+    needs: release
+    if: needs.release.outputs.released == 'true'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Update Chart versions
+        env:
+          VERSION: ${{ needs.release.outputs.version }}
+        run: |
+          sed -i "s/^version:.*/version: ${VERSION}/" chart/Chart.yaml
+          sed -i "s/^appVersion:.*/appVersion: \"${VERSION}\"/" chart/Chart.yaml
+
+      - name: Log in to GHCR
+        run: |
+          echo "${{ secrets.GITHUB_TOKEN }}" | helm registry login ${{ env.REGISTRY }} \
+            --username ${{ github.actor }} \
+            --password-stdin
+
+      - name: Package and push chart
+        env:
+          VERSION: ${{ needs.release.outputs.version }}
+        run: |
+          helm package chart/ --version "${VERSION}" --app-version "${VERSION}"
+          helm push "dropper-${VERSION}.tgz" oci://${{ env.REGISTRY }}/${{ github.repository_owner }}/charts
