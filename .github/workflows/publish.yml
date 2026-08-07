@@ -103,6 +103,7 @@ jobs:
       - name: Package and push chart
         env:
           VERSION: ${{ needs.release.outputs.version }}
+          OWNER: ${{ github.repository_owner }}
         run: |
           helm package chart/ --version "${VERSION}" --app-version "${VERSION}"
-          helm push "dropper-${VERSION}.tgz" oci://${{ env.REGISTRY }}/${{ github.repository_owner }}/charts
+          helm push "dropper-${VERSION}.tgz" oci://${{ env.REGISTRY }}/${OWNER,,}/charts
