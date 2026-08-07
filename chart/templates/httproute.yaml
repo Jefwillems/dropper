@@ -6,6 +6,8 @@ metadata:
   namespace: {{ .Release.Namespace }}
   labels:
     {{- include "dropper.labels" . | nindent 4 }}
+  annotations:
+    {{- include .Values.httpRoute.annotations . | nindent 4 }}
 spec:
   parentRefs:
     {{- toYaml .Values.httpRoute.parentRefs | nindent 4 }}

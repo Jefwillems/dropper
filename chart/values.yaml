@@ -80,6 +80,7 @@ ingress:
 # ingress and httpRoute are mutually exclusive.
 httpRoute:
   enabled: false
+  annotations: {}
   parentRefs:
     - name: gateway
       namespace: default
