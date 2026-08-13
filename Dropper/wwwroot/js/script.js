@@ -2,20 +2,6 @@ window.addEventListener('load', () => {
     const feed = document.getElementById('feed');
     const input = document.getElementById('message');
     const sendBtn = document.getElementById('send');
-    const themeToggle = document.getElementById('themeToggle');
-
-    function applyTheme(theme) {
-        document.documentElement.setAttribute('data-theme', theme);
-        themeToggle.textContent = theme === 'dark' ? '☀' : '🌙';
-        localStorage.setItem('dropper-theme', theme);
-    }
-
-    applyTheme(localStorage.getItem('dropper-theme') || 'dark');
-
-    themeToggle.addEventListener('click', () => {
-        const current = document.documentElement.getAttribute('data-theme');
-        applyTheme(current === 'dark' ? 'light' : 'dark');
-    });
 
     const source = new EventSource('/events');
     source.addEventListener('events', (e) => {
