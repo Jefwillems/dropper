@@ -13,7 +13,7 @@ RUN dotnet publish "Dropper/Dropper.csproj" \
     -o /app/publish \
     /p:StripSymbols=true
 
-FROM mcr.microsoft.com/dotnet/runtime-deps:10.0-alpine AS final
+FROM mcr.microsoft.com/dotnet/runtime-deps:11.0-alpine AS final
 WORKDIR /app
 COPY --from=build /app/publish .
 USER $APP_UID
